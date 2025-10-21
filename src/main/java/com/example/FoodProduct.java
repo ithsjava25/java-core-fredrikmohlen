@@ -32,11 +32,6 @@ public class FoodProduct extends Product implements Perishable, Shippable {
     public String productDetails() {
         return "Food: " + name() + ", Expires: " + expirationDate;
     }
-//    @Override
-//    public String productDetails() {
-//        return String.format("Food: %s, Expires: %s", name(), expirationDate);
-//    }
-
 
     @Override
     public double weight() {
@@ -50,7 +45,8 @@ public class FoodProduct extends Product implements Perishable, Shippable {
 
     @Override
     public LocalDate expirationDate() {
-        return null;
+
+        return this.expirationDate;
     }
 
     @Override
