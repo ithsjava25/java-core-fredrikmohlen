@@ -3,6 +3,7 @@ package com.example;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.function.IntPredicate;
 
 public class FoodProduct extends Product implements Perishable, Shippable {
     private final LocalDate expirationDate;
@@ -28,8 +29,8 @@ public class FoodProduct extends Product implements Perishable, Shippable {
     }
 
     @Override
-    public void productDetails() {
-        System.out.println("Food: " + getName() + ", Expires: " + expirationDate);
+    public String productDetails() {
+        return "Food: " + name() + ", Expires: " + expirationDate;
     }
 //    @Override
 //    public String productDetails() {

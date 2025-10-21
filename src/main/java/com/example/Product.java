@@ -2,6 +2,7 @@ package com.example;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.function.IntPredicate;
 
 public abstract class Product {
     private final UUID id;
@@ -20,19 +21,19 @@ public abstract class Product {
         this.price = price;
     }
 
-    public UUID getId() {
+    public UUID uuid() {
         return id;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public Category getCategory() {
+    public Category category() {
         return category;
     }
 
-    public BigDecimal getPrice() {
+    public BigDecimal price() {
         return price;
     }
 
@@ -43,5 +44,5 @@ public abstract class Product {
         this.price = price;
     }
 
-    public abstract void productDetails();
+    public abstract String productDetails();
 }

@@ -9,11 +9,14 @@ public final class Category {
     private final String name;
 
     private Category(String name) {
-        this.name = name;
-        }
+        if (name == null) {
+            throw new IllegalArgumentException("Category name can't be null");
+        } else
+            this.name = name;
+    }
 
     public static Category of(String name) {
-        if (name.equals(null)) {
+        if (name == null) {
             throw new IllegalArgumentException("Category name can't be null");
         }
         if (name.trim().isEmpty()) {

@@ -2,6 +2,7 @@ package com.example;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.function.IntPredicate;
 
 public class ElectronicsProduct extends Product implements Shippable{
     int warrantyMonths;
@@ -18,8 +19,8 @@ public class ElectronicsProduct extends Product implements Shippable{
     }
 
     @Override
-    public void productDetails() {
-        System.out.println("Electronics: " + getName() + " Warranty: " + warrantyMonths + " months");
+    public String productDetails() {
+        return "Electronics: " + name() + " Warranty: " + warrantyMonths + " months";
     }
 
     @Override
