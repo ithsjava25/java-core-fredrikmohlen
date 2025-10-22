@@ -2,6 +2,7 @@ package com.example;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Warehouse {
     private static final Map<String, Warehouse> cache = new HashMap<>();
@@ -23,9 +24,11 @@ public class Warehouse {
 
     public void addProduct(Product product) {
         if(product == null) {
-            throw new IllegalArgumentException("Product cannot be null");
-        }else
-            products.put(product.uuid(), product);
+            throw new IllegalArgumentException("Product cannot be null.");
+        }
+        if(products.containsKey(product.uuid()))
+            throw new IllegalArgumentException("Product with that id already exists, use updateProduct for updates.");
+        products.put(product.uuid(), product);
     }
 
     public List<Product> getProducts() {
@@ -44,6 +47,7 @@ public class Warehouse {
         product.setPrice(price);
         changedProducts.add(id);
     }
+    // todo: check if correct
     public List<Product> getChangedProducts() {
         List<Product> result = new ArrayList<>();
         for (UUID uuid : changedProducts) {
@@ -52,32 +56,36 @@ public class Warehouse {
         }
         return result;
     }
-
     public List<Perishable> expiredProducts(){
-      //  List<Product> result = new ArrayList<>();
-        //for (Product product : products.values()) {
-            //if(product)  result.add(product);
-
-        return null;
+        return products.values().stream()
+                .filter(p-> p instanceof Perishable)
+                .map(p->(Perishable) p)
+                .filter(Perishable::isExpired)
+                .collect(Collectors.toList());
    }
-
+    // todo
     public List<Shippable> shippableProducts() {
         return null;
     }
 
-    public Object remove(UUID id){
-        return null;
+    public void remove(UUID id){
+        products.remove(id);
     }
 
-
     public boolean isEmpty() {
-    return false;
+        return products.isEmpty();
     }
 
     public void clearProducts() {
+        products.clear();
     }
 
-    public Map<Category, Product> getProductsGroupedByCategories() {
-    return null;
+    public Map<Category, List<Product>> getProductsGroupedByCategories() {
+        if (products.isEmpty()) {
+            return Collections.emptyMap();
+        } else
+            return products.values().stream()
+                .collect(Collectors.groupingBy(Product::category));
+
     }
 }

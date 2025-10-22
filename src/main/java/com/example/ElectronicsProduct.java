@@ -20,7 +20,7 @@ public class ElectronicsProduct extends Product implements Shippable{
 
     @Override
     public String productDetails() {
-        return "Electronics: " + name() + " Warranty: " + warrantyMonths + " months";
+        return "Electronics: " + name() + ", Warranty: " + warrantyMonths + " months";
     }
 
     @Override
