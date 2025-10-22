@@ -3,7 +3,6 @@ package com.example;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
-import java.util.function.IntPredicate;
 
 public class FoodProduct extends Product implements Perishable, Shippable {
     private final LocalDate expirationDate;
@@ -24,7 +23,7 @@ public class FoodProduct extends Product implements Perishable, Shippable {
     }
     private static BigDecimal validatePrice(BigDecimal price) {
         if (price == null || price.compareTo(BigDecimal.ZERO) < 0)
-            throw new IllegalArgumentException("Price cannot be negative. ");
+            throw new IllegalArgumentException("Price cannot be negative.");
         return price;
     }
 
@@ -35,12 +34,14 @@ public class FoodProduct extends Product implements Perishable, Shippable {
 
     @Override
     public double weight() {
-        return 0;
+
+        return this.weight.doubleValue();
     }
 
     @Override
     public BigDecimal calculateShippingCost() {
-        return weight.multiply(BigDecimal.valueOf(50));
+
+        return weight.multiply(SHIPPING_COST_FOODPRODUCT);
     }
 
     @Override

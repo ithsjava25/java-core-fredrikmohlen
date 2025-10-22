@@ -56,6 +56,7 @@ public class Warehouse {
         }
         return result;
     }
+
     public List<Perishable> expiredProducts(){
         return products.values().stream()
                 .filter(p-> p instanceof Perishable)
@@ -65,7 +66,10 @@ public class Warehouse {
    }
     // todo
     public List<Shippable> shippableProducts() {
-        return null;
+        return products.values().stream()
+                .filter(p-> p instanceof Shippable)
+                .map(p-> (Shippable) p)
+                .collect(Collectors.toList());
     }
 
     public void remove(UUID id){

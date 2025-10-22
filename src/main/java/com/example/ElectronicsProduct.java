@@ -2,7 +2,6 @@ package com.example;
 
 import java.math.BigDecimal;
 import java.util.UUID;
-import java.util.function.IntPredicate;
 
 public class ElectronicsProduct extends Product implements Shippable{
     int warrantyMonths;
@@ -25,14 +24,14 @@ public class ElectronicsProduct extends Product implements Shippable{
 
     @Override
     public double weight() {
-        return 0.0;
+        return this.weight.doubleValue();
     }
 
     @Override
     public BigDecimal calculateShippingCost() {
-        BigDecimal cost = BigDecimal.valueOf(79);
+        BigDecimal cost = SHIPPING_COST_ELECTRONICS;
         if (weight.compareTo(BigDecimal.valueOf(5.0)) > 0)
-            cost = cost.add(BigDecimal.valueOf(49));
+            cost = cost.add(SHIPPING_EXTRA_COST);
 
         return cost;
     }
