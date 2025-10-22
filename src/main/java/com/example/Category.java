@@ -26,10 +26,12 @@ public final class Category {
         return CACHE.computeIfAbsent(normalized, Category::new);
 
     }
+
     private static String capitalize(String input) {
         if (input.isEmpty()) return input;
         return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
+
     public String getName() {
         return name;
     }
@@ -42,8 +44,7 @@ public final class Category {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof Category)) return false;
-        Category other = (Category) obj;
+        if (!(obj instanceof Category other)) return false;
         return name.equals(other.name);
     }
 

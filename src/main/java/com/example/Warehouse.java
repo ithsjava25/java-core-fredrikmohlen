@@ -14,19 +14,21 @@ public class Warehouse {
     private Warehouse(String name) {
         this.name = name;
     }
+
     public static Warehouse getInstance() {
         return defaultInstance;
     }
+
     public static Warehouse getInstance(String name) {
-         return cache.computeIfAbsent(name,Warehouse::new);
+        return cache.computeIfAbsent(name, Warehouse::new);
     }
 
 
     public void addProduct(Product product) {
-        if(product == null) {
+        if (product == null) {
             throw new IllegalArgumentException("Product cannot be null.");
         }
-        if(products.containsKey(product.uuid()))
+        if (products.containsKey(product.uuid()))
             throw new IllegalArgumentException("Product with that id already exists, use updateProduct for updates.");
         products.put(product.uuid(), product);
     }
@@ -47,7 +49,7 @@ public class Warehouse {
         product.setPrice(price);
         changedProducts.add(id);
     }
-    // todo: check if correct
+
     public List<Product> getChangedProducts() {
         List<Product> result = new ArrayList<>();
         for (UUID uuid : changedProducts) {
@@ -57,22 +59,22 @@ public class Warehouse {
         return result;
     }
 
-    public List<Perishable> expiredProducts(){
+    public List<Perishable> expiredProducts() {
         return products.values().stream()
-                .filter(p-> p instanceof Perishable)
-                .map(p->(Perishable) p)
+                .filter(p -> p instanceof Perishable)
+                .map(p -> (Perishable) p)
                 .filter(Perishable::isExpired)
-                .collect(Collectors.toList());
-   }
-    // todo
-    public List<Shippable> shippableProducts() {
-        return products.values().stream()
-                .filter(p-> p instanceof Shippable)
-                .map(p-> (Shippable) p)
                 .collect(Collectors.toList());
     }
 
-    public void remove(UUID id){
+    public List<Shippable> shippableProducts() {
+        return products.values().stream()
+                .filter(p -> p instanceof Shippable)
+                .map(p -> (Shippable) p)
+                .collect(Collectors.toList());
+    }
+
+    public void remove(UUID id) {
         products.remove(id);
     }
 
@@ -89,7 +91,7 @@ public class Warehouse {
             return Collections.emptyMap();
         } else
             return products.values().stream()
-                .collect(Collectors.groupingBy(Product::category));
+                    .collect(Collectors.groupingBy(Product::category));
 
     }
 }

@@ -3,7 +3,7 @@ package com.example;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class ElectronicsProduct extends Product implements Shippable{
+public class ElectronicsProduct extends Product implements Shippable {
     int warrantyMonths;
     BigDecimal weight;
 

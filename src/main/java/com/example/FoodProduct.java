@@ -21,6 +21,7 @@ public class FoodProduct extends Product implements Perishable, Shippable {
         this.weight = weight;
 
     }
+
     private static BigDecimal validatePrice(BigDecimal price) {
         if (price == null || price.compareTo(BigDecimal.ZERO) < 0)
             throw new IllegalArgumentException("Price cannot be negative.");
