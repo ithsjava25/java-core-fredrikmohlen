@@ -1,0 +1,48 @@
+package com.example;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+import java.util.function.IntPredicate;
+
+public abstract class Product {
+    private final UUID id;
+    private final String name;
+    private final Category category;
+    private BigDecimal price;
+
+    protected Product(UUID id, String name, Category category, BigDecimal price) {
+        if (id == null) throw new IllegalArgumentException("Product ID can't be null");
+        if (name == null || name.trim().isEmpty()) throw new IllegalArgumentException("Product name can't be blank");
+        if (category == null) throw new IllegalArgumentException("Product category can't be null");
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) throw new IllegalArgumentException("Product cannot be negative. ");
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.price = price;
+    }
+
+    public UUID uuid() {
+        return id;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public Category category() {
+        return category;
+    }
+
+    public BigDecimal price() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price must be non-negative");
+        }
+        this.price = price;
+    }
+
+    public abstract String productDetails();
+}
