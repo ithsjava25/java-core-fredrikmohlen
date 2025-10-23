@@ -1,11 +1,12 @@
 package com.example;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class Category {
-    private static final Map<String, Category> CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, Category> CACHE = new HashMap<>();
     private final String name;
 
     private Category(String name) {

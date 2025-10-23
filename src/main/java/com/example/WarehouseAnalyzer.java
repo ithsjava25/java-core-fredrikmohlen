@@ -139,32 +139,56 @@ class WarehouseAnalyzer {
     
     /**
      * Identifies products whose price deviates from the mean by more than the specified
-     * number of standard deviations. Uses population standard deviation over all products.
+     * number of standard deviations. Uses interquartile range (IQR) method to reliably identify potential errors
+     * while still allowing for a wide range of valid prices. It focuses on the middle price range, ignoring the
+     * extremes to identify potential outliers.
      * Test expectation: with a mostly tight cluster and two extremes, calling with 2.0 returns the two extremes.
      *
      * @param standardDeviations threshold in standard deviations (e.g., 2.0)
      * @return list of products considered outliers
      */
+//    public List<Product> findPriceOutliers(double standardDeviations) {
+//        List<Product> products = warehouse.getProducts();
+//        int n = products.size();
+//        if (n == 0) return List.of();
+//        double sum = products.stream().map(Product::price).mapToDouble(bd -> bd.doubleValue()).sum();
+//        double mean = sum / n;
+//        double variance = products.stream()
+//                .map(Product::price)
+//                .mapToDouble(bd -> Math.pow(bd.doubleValue() - mean, 2))
+//                .sum() / n;
+//        double std = Math.sqrt(variance);
+//        double threshold = standardDeviations * std;
+//        List<Product> outliers = new ArrayList<>();
+//        for (Product p : products) {
+//            double diff = Math.abs(p.price().doubleValue() - mean);
+//            if (diff > threshold) outliers.add(p);
+//        }
+//        return outliers;
+//    }
     public List<Product> findPriceOutliers(double standardDeviations) {
         List<Product> products = warehouse.getProducts();
         int n = products.size();
         if (n == 0) return List.of();
-        double sum = products.stream().map(Product::price).mapToDouble(bd -> bd.doubleValue()).sum();
-        double mean = sum / n;
-        double variance = products.stream()
-                .map(Product::price)
-                .mapToDouble(bd -> Math.pow(bd.doubleValue() - mean, 2))
-                .sum() / n;
-        double std = Math.sqrt(variance);
-        double threshold = standardDeviations * std;
-        List<Product> outliers = new ArrayList<>();
-        for (Product p : products) {
-            double diff = Math.abs(p.price().doubleValue() - mean);
-            if (diff > threshold) outliers.add(p);
-        }
+        List<Product> sortedProducts = products.stream()
+                .sorted(Comparator.comparing(Product::price))
+                .toList();
+        var indexQ1 = (int) Math.round(n*0.25);
+        var indexQ3 = (int) Math.round(n*0.75);
+        var q1 = sortedProducts.get(indexQ1).price();
+        var q3 = sortedProducts.get(indexQ3).price();
+        var iQR = q3.subtract(q1);
+        // Normal boundaries
+        var normalBoundariesVariable = BigDecimal.valueOf(standardDeviations).multiply(iQR);
+        var lowerBound = q1.subtract(normalBoundariesVariable);
+        var upperBound = q3.add(normalBoundariesVariable);
+        List<Product> outliers = sortedProducts.stream()
+                .filter(product -> product.price().compareTo(lowerBound) < 0
+                        ||  product.price().compareTo(upperBound) > 0)
+                .toList();
         return outliers;
+
     }
-    
     /**
      * Groups all shippable products into ShippingGroup buckets such that each group's total weight
      * does not exceed the provided maximum. The goal is to minimize the number of groups and/or total

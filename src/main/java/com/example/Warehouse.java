@@ -6,23 +6,21 @@ import java.util.stream.Collectors;
 
 public class Warehouse {
     private static final Map<String, Warehouse> cache = new HashMap<>();
-    private static final Warehouse defaultInstance = new Warehouse("default");
-    private final String name;
+    private static final String DEFAULT_NAME = "DefaultWarehouse";
+    // private final String name;
     private final Map<UUID, Product> products = new HashMap<>();
     private final Set<UUID> changedProducts = new HashSet<>();
 
     private Warehouse(String name) {
-        this.name = name;
     }
 
     public static Warehouse getInstance() {
-        return defaultInstance;
+        return getInstance(DEFAULT_NAME);
     }
 
     public static Warehouse getInstance(String name) {
         return cache.computeIfAbsent(name, Warehouse::new);
     }
-
 
     public void addProduct(Product product) {
         if (product == null) {
@@ -46,6 +44,9 @@ public class Warehouse {
         if (product == null) {
             throw new NoSuchElementException("Product not found with id: " + id);
         }
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price must be bigger than zero.");
+        }
         product.setPrice(price);
         changedProducts.add(id);
     }
@@ -54,7 +55,8 @@ public class Warehouse {
         List<Product> result = new ArrayList<>();
         for (UUID uuid : changedProducts) {
             Product product = products.get(uuid);
-            if (product != null) result.add(product);
+            if (product != null)
+                result.add(product);
         }
         return result;
     }
